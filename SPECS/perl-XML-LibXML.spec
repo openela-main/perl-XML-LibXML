@@ -8,7 +8,7 @@ Name:           perl-XML-LibXML
 # it might not be needed anymore
 # this module is maintained, the other is not
 Version:        2.0210
-Release:        4%{?dist}
+Release:        4%{?dist}.1
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 License:        (GPL-1.0-or-later OR Artistic-1.0-Perl) AND MIT
@@ -19,6 +19,8 @@ Source0:        https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/XML-LibXML-%{v
 Patch0:         XML-LibXML-2.0202-Parse-an-ampersand-entity-in-SAX-interface.patch
 # To reduce dependencies replace Alien::Libxml2 with pkg-config
 Patch1:         XML-LibXML-2.0208-Use-pkgconfig-instead-of-Alien-Libxml2.patch
+# https://github.com/cpan-authors/XML-LibXML/commit/059abf5f9336e2213794b5b545c707394cca3ac7
+Patch2:         XML-LibXML-2.0210-CVE-2026-8177.patch
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  glibc-common
@@ -189,6 +191,11 @@ fi
 %{_libexecdir}/%{name}
 
 %changelog
+* Tue Jun 23 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 1:2.0210-4.1
+- Fix out-of-bounds heap read on truncated UTF-8 sequences
+  (CVE-2026-8177)
+- Resolves: RHEL-186521
+
 * Tue Oct 29 2024 Troy Dawson <tdawson@redhat.com> - 1:2.0210-4
 - Bump release for October 2024 mass rebuild:
   Resolves: RHEL-64018
