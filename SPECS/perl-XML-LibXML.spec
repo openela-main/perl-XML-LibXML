@@ -8,7 +8,7 @@ Name:           perl-XML-LibXML
 # it might not be needed anymore
 # this module is maintained, the other is not
 Version:        2.0206
-Release:        5%{?dist}
+Release:        5%{?dist}.1
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 License:        (GPL+ or Artistic) and MIT
@@ -19,6 +19,8 @@ Source0:        https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/XML-LibXML-%{v
 Patch0:         XML-LibXML-2.0202-Parse-an-ampersand-entity-in-SAX-interface.patch
 # To reduce dependencies replace Alien::Libxml2 with pkg-config
 Patch1:         XML-LibXML-2.0206-Use-pkgconfig-instead-of-Alien-Libxml2.patch
+# https://github.com/cpan-authors/XML-LibXML/commit/059abf5f9336e2213794b5b545c707394cca3ac7
+Patch2:         XML-LibXML-2.0206-CVE-2026-8177.patch
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  glibc-common
@@ -95,6 +97,7 @@ validating XML parser and the high performance DOM implementation.
 %setup -q -n XML-LibXML-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 chmod -x *.c
 for i in Changes; do
   /usr/bin/iconv -f iso8859-1 -t utf-8 $i > $i.conv && /bin/mv -f $i.conv $i
@@ -135,6 +138,11 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Jun 23 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 1:2.0206-5.1
+- Fix out-of-bounds UTF-8 heap read in node name validation
+  (CVE-2026-8177)
+- Resolves: RHEL-186532
+
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 1:2.0206-5
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688
