@@ -8,13 +8,15 @@ Name:           perl-XML-LibXML
 # it might not be needed anymore
 # this module is maintained, the other is not
 Version:        2.0132
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 Group:          Development/Libraries
 License:        (GPL+ or Artistic) and MIT
 URL:            http://search.cpan.org/dist/XML-LibXML/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXML-%{version}.tar.gz 
+# https://github.com/cpan-authors/XML-LibXML/commit/059abf5f9336e2213794b5b545c707394cca3ac7
+Patch0:         perl-XML-LibXML-2.0132-CVE-2026-8177.patch
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  glibc-common
@@ -93,6 +95,7 @@ validating XML parser and the high performance DOM implementation.
 
 %prep
 %setup -q -n XML-LibXML-%{version}
+%patch0 -p1
 chmod -x *.c
 for i in Changes; do
   /usr/bin/iconv -f iso8859-1 -t utf-8 $i > $i.conv && /bin/mv -f $i.conv $i
@@ -136,6 +139,11 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Jun 23 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 1:2.0132-3
+- Fix out-of-bounds heap read via truncated UTF-8 in node name
+  validation (CVE-2026-8177)
+- Resolves: RHEL-186519
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:2.0132-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
